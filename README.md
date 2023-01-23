@@ -15,7 +15,7 @@ This package helps to get device fingerprint to integrate with Koin
 
 ## Features
 
-This package will give you the json model and production and sandbox url`s
+This package will give you the json model, production and sandbox url`s and data equality comparison
 
 ## Usage
 
