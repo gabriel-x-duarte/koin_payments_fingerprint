@@ -21,7 +21,7 @@ abstract class AdditionalOperations {
   int get hashCode => toJson().hashCode;
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(covariant Object other) {
     if (other.hashCode == hashCode) {
       return true;
     }
