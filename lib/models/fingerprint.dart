@@ -57,13 +57,6 @@ class Fingerprint extends DataEquality {
 
     return data;
   }
-
-  @override
-  List<Object?> get props => [
-        organizationId,
-        sessionId,
-        mobileApplication,
-      ];
 }
 
 class MobileApplication extends DataEquality {
@@ -77,7 +70,7 @@ class MobileApplication extends DataEquality {
   final String networkType;
   final String isp;
 
-  const MobileApplication({
+  const MobileApplication._({
     required this.crossApplicationUniqueId,
     required this.application,
     required this.operativeSystem,
@@ -89,9 +82,30 @@ class MobileApplication extends DataEquality {
     required this.isp,
   });
 
+  MobileApplication({
+    required Application application,
+    required OperativeSystem operativeSystem,
+    required Device device,
+    required Screen screen,
+    required Hardware hardware,
+    required Connectivity connectivity,
+    required String networkType,
+    required String isp,
+  }) : this._(
+          crossApplicationUniqueId:
+              "${application.hashCode}.${operativeSystem.hashCode}.${device.hashCode}.${screen.hashCode}",
+          application: application,
+          operativeSystem: operativeSystem,
+          device: device,
+          screen: screen,
+          hardware: hardware,
+          connectivity: connectivity,
+          networkType: networkType,
+          isp: isp,
+        );
+
   factory MobileApplication.from(MobileApplication mobileApplication) {
     return MobileApplication(
-      crossApplicationUniqueId: mobileApplication.crossApplicationUniqueId,
       application: Application.from(mobileApplication.application),
       operativeSystem: OperativeSystem.from(mobileApplication.operativeSystem),
       device: Device.from(mobileApplication.device),
@@ -104,8 +118,6 @@ class MobileApplication extends DataEquality {
   }
 
   factory MobileApplication.fromMap(Map<String, dynamic> data) {
-    final String crossApplicationUniqueId =
-        data['crossApplicationUniqueId'] ?? "";
     final Map<String, dynamic> applicationData = Map<String, dynamic>.from(
       data['application'] ?? {},
     );
@@ -128,7 +140,6 @@ class MobileApplication extends DataEquality {
     final String isp = data['isp'] ?? "";
 
     return MobileApplication(
-      crossApplicationUniqueId: crossApplicationUniqueId,
       application: Application.fromMap(applicationData),
       operativeSystem: OperativeSystem.fromMap(operativeSystemData),
       device: Device.fromMap(deviceData),
@@ -170,8 +181,6 @@ class MobileApplication extends DataEquality {
     String? isp,
   }) {
     return MobileApplication(
-      crossApplicationUniqueId:
-          crossApplicationUniqueId ?? this.crossApplicationUniqueId,
       application: application ?? this.application,
       operativeSystem: operativeSystem ?? this.operativeSystem,
       device: device ?? this.device,
@@ -182,19 +191,6 @@ class MobileApplication extends DataEquality {
       isp: isp ?? this.isp,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        crossApplicationUniqueId,
-        application,
-        operativeSystem,
-        device,
-        screen,
-        hardware,
-        connectivity,
-        networkType,
-        isp,
-      ];
 }
 
 class Application extends DataEquality {
@@ -275,16 +271,6 @@ class Application extends DataEquality {
       advertisingId: advertisingId ?? this.advertisingId,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        installationDate,
-        namespace,
-        version,
-        name,
-        androidId,
-        advertisingId,
-      ];
 }
 
 class OperativeSystem extends DataEquality {
@@ -349,14 +335,6 @@ class OperativeSystem extends DataEquality {
       name: name ?? this.name,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        version,
-        apiLevel,
-        id,
-        name,
-      ];
 }
 
 class Device extends DataEquality {
@@ -423,14 +401,6 @@ class Device extends DataEquality {
       language: language ?? this.language,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        name,
-        model,
-        battery,
-        language,
-      ];
 }
 
 class Battery extends DataEquality {
@@ -455,7 +425,7 @@ class Battery extends DataEquality {
   factory Battery.fromMap(Map<String, dynamic> data) {
     final String status = data['status'] ?? "";
     final String type = data['type'] ?? "";
-    final int level = data['level'] ?? "";
+    final int level = data['level'] ?? 0;
 
     return Battery(
       status: status,
@@ -487,13 +457,6 @@ class Battery extends DataEquality {
       level: level ?? this.level,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        status,
-        type,
-        level,
-      ];
 }
 
 class Screen extends DataEquality {
@@ -542,12 +505,6 @@ class Screen extends DataEquality {
       orientation: orientation ?? this.orientation,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        resolution,
-        orientation,
-      ];
 }
 
 class Hardware extends DataEquality {
@@ -576,13 +533,13 @@ class Hardware extends DataEquality {
   }
 
   factory Hardware.fromMap(Map<String, dynamic> data) {
-    final String cpuArchitecture = data['cpuArchitecture'];
-    final int cpuCores = data['cpuCores'];
+    final String cpuArchitecture = data['cpuArchitecture'] ?? "";
+    final int cpuCores = data['cpuCores'] ?? 0;
     final List<String> sensors = List<String>.from(
       data['sensors'] ?? [],
     );
-    final bool wifiAvailable = data['wifiAvailable'];
-    final bool multitouchAvailable = data['multitouchAvailable'];
+    final bool wifiAvailable = data['wifiAvailable'] ?? false;
+    final bool multitouchAvailable = data['multitouchAvailable'] ?? false;
 
     return Hardware(
       cpuArchitecture: cpuArchitecture,
@@ -622,15 +579,6 @@ class Hardware extends DataEquality {
       multitouchAvailable: multitouchAvailable ?? this.multitouchAvailable,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        cpuArchitecture,
-        cpuCores,
-        sensors,
-        wifiAvailable,
-        multitouchAvailable,
-      ];
 }
 
 class Connectivity extends DataEquality {
@@ -673,11 +621,6 @@ class Connectivity extends DataEquality {
       ipAddresses: ipAddresses ?? this.ipAddresses,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        ipAddresses,
-      ];
 }
 
 class IpAddresses extends DataEquality {
@@ -734,11 +677,4 @@ class IpAddresses extends DataEquality {
       wired: wired ?? this.wired,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        line,
-        wireless,
-        wired,
-      ];
 }

@@ -4,15 +4,24 @@ import 'utils/data_equality.dart';
 
 part "./models/fingerprint.dart";
 
+/// Abstract helper class
 abstract class KoinPaymentsFingerprint {
-  static Future<Fingerprint> getDeviceFingerprint() async =>
-      await _gatherDeviceFingerprintInformation();
+  /// Returns sandbox URL
+  static const String sandboxUrl =
+      "https://api-sandbox.koin.com.br/fingerprint/session/mobile";
 
-  static Future<Fingerprint> _gatherDeviceFingerprintInformation() async {
-    return Fingerprint(
-      organizationId: "organizationId",
-      sessionId: "sessionId",
-      mobileApplication: MobileApplication.fromMap(const {}),
-    );
-  }
+  /// Returns production URL
+  static const String productionUrl = ""; // TODO:
+
+  /// Returns device fingerprint
+  static Fingerprint getDeviceFingerprint({
+    required String organizationId,
+    required String sessionId,
+    required MobileApplication mobileApplication,
+  }) =>
+      Fingerprint(
+        organizationId: organizationId,
+        sessionId: sessionId,
+        mobileApplication: mobileApplication,
+      );
 }

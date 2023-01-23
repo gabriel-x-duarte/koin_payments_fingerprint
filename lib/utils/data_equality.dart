@@ -1,12 +1,12 @@
 import 'dart:convert' as converter;
 
-import 'package:equatable/equatable.dart';
-
-abstract class DataEquality extends Equatable with AdditionalOperations {
+abstract class DataEquality extends AdditionalOperations {
   const DataEquality();
 }
 
-mixin AdditionalOperations on Equatable {
+abstract class AdditionalOperations {
+  const AdditionalOperations();
+
   dynamic copyWith();
 
   Map<String, dynamic> toMap();
@@ -15,6 +15,18 @@ mixin AdditionalOperations on Equatable {
     return converter.jsonEncode(
       toMap(),
     );
+  }
+
+  @override
+  int get hashCode => toJson().hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other.hashCode == hashCode) {
+      return true;
+    }
+
+    return false;
   }
 
   @override

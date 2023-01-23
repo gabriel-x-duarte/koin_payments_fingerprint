@@ -6,8 +6,7 @@ import 'package:koin_payments_fingerprint/koin_payments_fingerprint.dart';
 
 void main() {
   test('Return device fingerprint', () async {
-    final Fingerprint fingerprint =
-        await KoinPaymentsFingerprint.getDeviceFingerprint();
+    final Fingerprint fingerprint = Fingerprint.fromMap({});
 
     log(fingerprint.toString());
   });
