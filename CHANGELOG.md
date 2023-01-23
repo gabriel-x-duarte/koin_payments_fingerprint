@@ -1,3 +1,3 @@
-## 0.0.1
+## 1.0.2
 
-* TODO: Describe initial release.
+koin_payments_fingerprint is a library to help integrating with Koin
