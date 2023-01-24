@@ -14,7 +14,7 @@ abstract class KoinPaymentsFingerprint {
   static const String productionUrl = ""; // TODO:
 
   /// Returns device fingerprint
-  static Fingerprint getDeviceFingerprint({
+  static Fingerprint fingerprint({
     required String organizationId,
     required String sessionId,
     required MobileApplication mobileApplication,
