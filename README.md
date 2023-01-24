@@ -114,9 +114,9 @@ You could implement a third optional method and send the device fingerprint when
 
   void _getFingerprintAndSubmit() async {
     if (!Platform.isAndroid && !Platform.isIOS) {
-      Navigator.of(context).pop();
-
       print("Platform not surpoted");
+
+      return; 
     }
 
     final MobileApplication mobileApplication = Platform.isIOS
