@@ -234,6 +234,33 @@ You could implement a third optional method and send the device fingerprint when
           : "landscape",
     );
 
+    /// Connectivity
+    final networkInterfaces = await NetworkInterface.list();
+
+    String? ipAddress;
+
+    for (var interface in networkInterfaces) {
+      if (ipAddress != null) {
+        break;
+      }
+
+      for (var addr in interface.addresses) {
+        if (addr.address.isNotEmpty) {
+          ipAddress = addr.address;
+
+          break;
+        }
+      }
+    }
+
+    final Connectivity connectivity = Connectivity(
+      ipAddresses: IpAddresses(
+        line: "",
+        wireless: ipAddress ?? "",
+        wired: "",
+      ),
+    );
+
     ///
 
     final MobileApplication mobileApplication = testMobileApplication.copyWith(
@@ -241,6 +268,7 @@ You could implement a third optional method and send the device fingerprint when
       operativeSystem: operativeSystem,
       device: device,
       screen: screen,
+      connectivity: connectivity,
     );
 
     return mobileApplication;
@@ -325,6 +353,33 @@ You could implement a third optional method and send the device fingerprint when
           : "landscape",
     );
 
+    /// Connectivity
+    final networkInterfaces = await NetworkInterface.list();
+
+    String? ipAddress;
+
+    for (var interface in networkInterfaces) {
+      if (ipAddress != null) {
+        break;
+      }
+
+      for (var addr in interface.addresses) {
+        if (addr.address.isNotEmpty) {
+          ipAddress = addr.address;
+
+          break;
+        }
+      }
+    }
+
+    final Connectivity connectivity = Connectivity(
+      ipAddresses: IpAddresses(
+        line: "",
+        wireless: ipAddress ?? "",
+        wired: "",
+      ),
+    );
+
     ///
 
     final MobileApplication mobileApplication = testMobileApplication.copyWith(
@@ -332,6 +387,7 @@ You could implement a third optional method and send the device fingerprint when
       operativeSystem: operativeSystem,
       device: device,
       screen: screen,
+      connectivity: connectivity,
     );
 
     return mobileApplication;
