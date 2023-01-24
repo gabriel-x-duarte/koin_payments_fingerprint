@@ -1,7 +1,7 @@
 name: koin_payments_fingerprint
 description: A new Flutter package project.
 version: 1.0.1
-homepage:
+homepage: https://github.com/gabriel-x-duarte/koin_payments_fingerprint
 
 environment:
   sdk: '>=2.18.1 <3.0.0'

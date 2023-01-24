@@ -18,47 +18,15 @@ This package helps to get device fingerprint to integrate with Koin
 This package will give you the json model, production and sandbox url`s and data equality comparison
 
 ## Usage
+It is recomended that you send the device fingerprint at least at these two moments: 
+1 - when the application starts or the user lands on first screen.
+2 - when the user starts the checkout procedure (before the payment action)
+
+You could implement a third optional method and send the device fingerprint when the user adds an item to the cart. You can also check for data equality and compare if this firgerprint is different from the last one and avoid too many unnecessary requests.
+
 
 ```dart
-import 'dart:io';
 
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:http/http.dart' as http;
-
-import 'package:koin_payments_fingerprint/koin_payments_fingerprint.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
   static const String _organizationId = "tZFvfVActG";
   static const String _sessionId = "233c8675-e227-4198-b4ca-15e3590876ff";
 
@@ -144,27 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   };
 
-  int _counter = 0;
-
-  void _incrementCounter() async {
-    setState(() {
-      _counter++;
-    });
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: const Center(
-            child: CircularProgressIndicator(
-              color: Colors.red,
-            ),
-          ),
-        );
-      },
-    );
-
+  void _getFingerprintAndSubmit() async {
     if (!Platform.isAndroid && !Platform.isIOS) {
       Navigator.of(context).pop();
 
@@ -192,12 +140,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     print("res: \n");
     print(res);
-
-    if (!mounted) {
-      return;
-    }
-
-    Navigator.of(context).pop();
   }
 
   bool checkTestFingerprint(Fingerprint fingerprint) {
@@ -423,35 +365,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return true;
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-}
 
 ```
 
