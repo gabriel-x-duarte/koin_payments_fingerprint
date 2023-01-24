@@ -93,7 +93,7 @@ class MobileApplication extends DataEquality {
     required String isp,
   }) : this._(
           crossApplicationUniqueId:
-              "${application.hashCode}.${operativeSystem.hashCode}.${device.hashCode}.${screen.hashCode}",
+              "${"${application.hashCode}${operativeSystem.hashCode}${device.hashCode}${screen.hashCode}${hardware.hashCode}${connectivity.hashCode}".hashCode}.${"${application.hashCode}${screen.hashCode}${hardware.hashCode}".hashCode}.${"${operativeSystem.hashCode}${device.hashCode}${connectivity.hashCode}".hashCode}",
           application: application,
           operativeSystem: operativeSystem,
           device: device,

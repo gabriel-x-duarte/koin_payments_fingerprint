@@ -1,7 +1,8 @@
 import 'dart:io';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,7 +15,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -270,6 +270,33 @@ class _MyHomePageState extends State<MyHomePage> {
           : "landscape",
     );
 
+    /// Connectivity
+    final networkInterfaces = await NetworkInterface.list();
+
+    String? ipAddress;
+
+    for (var interface in networkInterfaces) {
+      if (ipAddress != null) {
+        break;
+      }
+
+      for (var addr in interface.addresses) {
+        if (addr.address.isNotEmpty) {
+          ipAddress = addr.address;
+
+          break;
+        }
+      }
+    }
+
+    final Connectivity connectivity = Connectivity(
+      ipAddresses: IpAddresses(
+        line: "",
+        wireless: ipAddress ?? "",
+        wired: "",
+      ),
+    );
+
     ///
 
     final MobileApplication mobileApplication = testMobileApplication.copyWith(
@@ -277,6 +304,7 @@ class _MyHomePageState extends State<MyHomePage> {
       operativeSystem: operativeSystem,
       device: device,
       screen: screen,
+      connectivity: connectivity,
     );
 
     return mobileApplication;
@@ -361,6 +389,33 @@ class _MyHomePageState extends State<MyHomePage> {
           : "landscape",
     );
 
+    /// Connectivity
+    final networkInterfaces = await NetworkInterface.list();
+
+    String? ipAddress;
+
+    for (var interface in networkInterfaces) {
+      if (ipAddress != null) {
+        break;
+      }
+
+      for (var addr in interface.addresses) {
+        if (addr.address.isNotEmpty) {
+          ipAddress = addr.address;
+
+          break;
+        }
+      }
+    }
+
+    final Connectivity connectivity = Connectivity(
+      ipAddresses: IpAddresses(
+        line: "",
+        wireless: ipAddress ?? "",
+        wired: "",
+      ),
+    );
+
     ///
 
     final MobileApplication mobileApplication = testMobileApplication.copyWith(
@@ -368,6 +423,7 @@ class _MyHomePageState extends State<MyHomePage> {
       operativeSystem: operativeSystem,
       device: device,
       screen: screen,
+      connectivity: connectivity,
     );
 
     return mobileApplication;
