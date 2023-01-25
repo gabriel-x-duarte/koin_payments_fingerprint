@@ -11,7 +11,7 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 
-This package helps to get device fingerprint to integrate with Koin
+This package helps to assemble the device fingerprint information to integrate with Koin
 
 ## Features
 
@@ -30,8 +30,11 @@ You could implement a third optional method and send the device fingerprint when
   static const String _organizationId = "tZFvfVActG";
   static const String _sessionId = "233c8675-e227-4198-b4ca-15e3590876ff";
 
+  /// To always get the same "crossApplicationUniqueId"
+  /// with this example, just pass a fixed instalationDate
   static final instalationDate =
       DateTime.now().subtract(const Duration(days: 90));
+  //static final instalationDate = DateTime(2000);
 
   static const _testJson = <String, dynamic>{
     "organizationId": "tZFvfVActG",

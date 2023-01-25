@@ -40,8 +40,11 @@ class _MyHomePageState extends State<MyHomePage> {
   static const String _organizationId = "tZFvfVActG";
   static const String _sessionId = "233c8675-e227-4198-b4ca-15e3590876ff";
 
+  /// To always get the same "crossApplicationUniqueId"
+  /// with this example, just pass a fixed instalationDate
   static final instalationDate =
       DateTime.now().subtract(const Duration(days: 90));
+  //static final instalationDate = DateTime(2000);
 
   static const _testJson = <String, dynamic>{
     "organizationId": "tZFvfVActG",
@@ -213,8 +216,7 @@ class _MyHomePageState extends State<MyHomePage> {
       (applicationPackageName.length - ".$applicationName".length),
     );
     final String applicationVersion = packageInfo.version;
-    final String applicationInstallationDate =
-        instalationDate.toIso8601String();
+    final DateTime applicationInstallationDate = instalationDate;
     final String applicationAndroidId = androidInfo.id;
 
     final Application application = Application(
@@ -334,8 +336,7 @@ class _MyHomePageState extends State<MyHomePage> {
       (applicationPackageName.length - ".$applicationName".length),
     );
     final String applicationVersion = packageInfo.version;
-    final String applicationInstallationDate =
-        instalationDate.toIso8601String();
+    final DateTime applicationInstallationDate = instalationDate;
 
     final Application application = Application(
       installationDate: applicationInstallationDate,

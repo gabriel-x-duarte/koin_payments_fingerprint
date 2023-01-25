@@ -93,7 +93,7 @@ class MobileApplication extends DataEquality {
     required String isp,
   }) : this._(
           crossApplicationUniqueId:
-              "${"${application.hashCode}${operativeSystem.hashCode}${device.hashCode}${screen.hashCode}${hardware.hashCode}${connectivity.hashCode}".hashCode}.${"${application.hashCode}${screen.hashCode}${hardware.hashCode}".hashCode}.${"${operativeSystem.hashCode}${device.hashCode}${connectivity.hashCode}".hashCode}",
+              "${"${application.hashCode}${operativeSystem.hashCode}".hashCode}.${"${application.hashCode}${device.hashCode}".hashCode}.${"${application.hashCode}${screen.hashCode}".hashCode}.${"${application.hashCode}${hardware.hashCode}".hashCode}.${"${application.hashCode}${connectivity.hashCode}".hashCode}",
           application: application,
           operativeSystem: operativeSystem,
           device: device,
@@ -194,7 +194,7 @@ class MobileApplication extends DataEquality {
 }
 
 class Application extends DataEquality {
-  final String installationDate;
+  final DateTime installationDate;
   final String namespace;
   final String version;
   final String name;
@@ -222,7 +222,8 @@ class Application extends DataEquality {
   }
 
   factory Application.fromMap(Map<String, dynamic> data) {
-    final String installationDate = data['installationDate'] ?? "";
+    final DateTime installationDate =
+        DateTime.tryParse(data['installationDate'] ?? "") ?? DateTime.now();
     final String namespace = data['namespace'] ?? "";
     final String version = data['version'] ?? "";
     final String name = data['name'] ?? "";
@@ -243,7 +244,7 @@ class Application extends DataEquality {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
 
-    data['installationDate'] = installationDate;
+    data['installationDate'] = installationDate.toIso8601String();
     data['namespace'] = namespace;
     data['version'] = version;
     data['name'] = name;
@@ -255,7 +256,7 @@ class Application extends DataEquality {
 
   @override
   Application copyWith({
-    String? installationDate,
+    DateTime? installationDate,
     String? namespace,
     String? version,
     String? name,
