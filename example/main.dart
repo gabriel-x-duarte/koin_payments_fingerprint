@@ -38,7 +38,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static const String _organizationId = "tZFvfVActG";
-  static const String _sessionId = "233c8675-e227-4198-b4ca-15e3590876ff";
+  //static const String _sessionId = "233c8675-e227-4198-b4ca-15e3590876ff";
 
   /// To always get the same "crossApplicationUniqueId"
   /// with this example, just pass a fixed instalationDate
@@ -158,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final Fingerprint fingerprint = Fingerprint(
       organizationId: _organizationId,
-      sessionId: _sessionId,
+      //sessionId: _sessionId,
       mobileApplication: mobileApplication,
     );
 
@@ -207,6 +207,9 @@ class _MyHomePageState extends State<MyHomePage> {
         MobileApplication.fromMap(const {});
 
     ///
+
+    /// Device Unique Id
+    final deviceUniqueId = androidInfo.id;
 
     /// Application
     final String applicationPackageName = packageInfo.packageName;
@@ -302,6 +305,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ///
 
     final MobileApplication mobileApplication = testMobileApplication.copyWith(
+      deviceUniqueId: deviceUniqueId,
       application: application,
       operativeSystem: operativeSystem,
       device: device,
@@ -327,6 +331,9 @@ class _MyHomePageState extends State<MyHomePage> {
         MobileApplication.fromMap(const {});
 
     ///
+
+    /// Device Unique Id
+    final deviceUniqueId = iosInfo.identifierForVendor ?? "";
 
     /// Application
     final String applicationPackageName = packageInfo.packageName;
@@ -420,6 +427,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ///
 
     final MobileApplication mobileApplication = testMobileApplication.copyWith(
+      deviceUniqueId: deviceUniqueId,
       application: application,
       operativeSystem: operativeSystem,
       device: device,
@@ -436,7 +444,7 @@ class _MyHomePageState extends State<MyHomePage> {
     bool sandbox = true,
   }) async {
     const String sandboxUrl = KoinPaymentsFingerprint.sandboxUrl;
-    const String productionUrl = KoinPaymentsFingerprint.productionUrl;
+    const String productionUrl = "";
 
     final String url = sandbox ? sandboxUrl : productionUrl;
 

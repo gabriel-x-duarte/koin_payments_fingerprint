@@ -24,11 +24,13 @@ It is recomended that you send the device fingerprint at least at these two mome
 
 You could implement a third optional method and send the device fingerprint when the user adds an item to the cart. You can also check for data equality and compare if this firgerprint is different from the last one and avoid too many unnecessary requests.
 
+It is very important that you keep the last fingerprint you generated in a storage, since you`ll have to use some information when you submit the payment request.
+
 
 ```dart
 
   static const String _organizationId = "tZFvfVActG";
-  static const String _sessionId = "233c8675-e227-4198-b4ca-15e3590876ff";
+  //static const String _sessionId = "233c8675-e227-4198-b4ca-15e3590876ff";
 
   /// To always get the same "crossApplicationUniqueId"
   /// with this example, just pass a fixed instalationDate
@@ -128,7 +130,7 @@ You could implement a third optional method and send the device fingerprint when
 
     final Fingerprint fingerprint = Fingerprint(
       organizationId: _organizationId,
-      sessionId: _sessionId,
+      //sessionId: _sessionId,
       mobileApplication: mobileApplication,
     );
 
@@ -171,6 +173,9 @@ You could implement a third optional method and send the device fingerprint when
         MobileApplication.fromMap(const {});
 
     ///
+
+    /// Device Unique Id
+    final deviceUniqueId = androidInfo.id;
 
     /// Application
     final String applicationPackageName = packageInfo.packageName;
@@ -267,6 +272,7 @@ You could implement a third optional method and send the device fingerprint when
     ///
 
     final MobileApplication mobileApplication = testMobileApplication.copyWith(
+      deviceUniqueId: deviceUniqueId,
       application: application,
       operativeSystem: operativeSystem,
       device: device,
@@ -292,6 +298,9 @@ You could implement a third optional method and send the device fingerprint when
         MobileApplication.fromMap(const {});
 
     ///
+
+    /// Device Unique Id
+    final deviceUniqueId = iosInfo.identifierForVendor ?? "";
 
     /// Application
     final String applicationPackageName = packageInfo.packageName;
@@ -386,6 +395,7 @@ You could implement a third optional method and send the device fingerprint when
     ///
 
     final MobileApplication mobileApplication = testMobileApplication.copyWith(
+      deviceUniqueId: deviceUniqueId,
       application: application,
       operativeSystem: operativeSystem,
       device: device,
@@ -402,7 +412,7 @@ You could implement a third optional method and send the device fingerprint when
     bool sandbox = true,
   }) async {
     const String sandboxUrl = KoinPaymentsFingerprint.sandboxUrl;
-    const String productionUrl = KoinPaymentsFingerprint.productionUrl;
+    const String productionUrl = "";
 
     final String url = sandbox ? sandboxUrl : productionUrl;
 
