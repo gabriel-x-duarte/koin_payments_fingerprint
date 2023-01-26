@@ -15,7 +15,7 @@ This package helps to assemble the device fingerprint information to integrate w
 
 ## Features
 
-This package will give you the json model, production and sandbox url`s and data equality comparison
+This package will give you the json model, sandbox url and data equality comparison
 
 ## Usage
 It is recomended that you send the device fingerprint at least at these two moments: 
