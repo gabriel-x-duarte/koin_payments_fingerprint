@@ -108,7 +108,7 @@ It is very important that you keep the last fingerprint you generated in a varia
       "connectivity": {
         "ipAddresses": {
           "line": "ipLine",
-          "wireless": "ipWireless",
+          "wireless": "192.168.1.103",
           "wired": "ipWired"
         }
       },
