@@ -119,9 +119,7 @@ It is very important that you keep the last fingerprint you generated in a stora
 
   void _getFingerprintAndSubmit() async {
     if (!Platform.isAndroid && !Platform.isIOS) {
-      print("Platform not surpoted");
-
-      return; 
+      throw Exception("Platform not surpoted");
     }
 
     final MobileApplication mobileApplication = Platform.isIOS
@@ -134,33 +132,34 @@ It is very important that you keep the last fingerprint you generated in a stora
       mobileApplication: mobileApplication,
     );
 
-    print(checkTestFingerprint(fingerprint));
+    checkTestFingerprint(fingerprint); // false
 
-    print(fingerprint == Fingerprint.from(fingerprint));
+    fingerprint == Fingerprint.from(fingerprint); // true
 
-    print("data: \n");
-    print(fingerprint.toString());
+    final Fingerprint newFingerprint = Fingerprint(
+      organizationId: _organizationId,
+      mobileApplication: mobileApplication,
+    ); // This newFingerprint is generated using the same information
 
-    final res = await sendDeviceFingerprintInformation(fingerprint);
+    fingerprint ==
+        newFingerprint; // false, because the newFingerprint has a different sessionId
 
-    print("res: \n");
-    print(res);
+    fingerprint ==
+        newFingerprint.copyWith(
+          sessionId: fingerprint.sessionId,
+        ); // true, because if the information inside mobileApplication did not change, both fingerprints have the same information
+
+    await sendDeviceFingerprintInformation(fingerprint);
   }
 
   bool checkTestFingerprint(Fingerprint fingerprint) {
     final Fingerprint testFingerprint = Fingerprint.fromMap(_testJson);
 
-    print(
-        "testFingerprint: \nHashcode: ${testFingerprint.hashCode} \ntoString: ${testFingerprint.toString()}");
-    print(
-        "fingerprint: \nHashcode: ${fingerprint.hashCode} \ntoString: ${fingerprint.toString()}");
-
     return fingerprint == testFingerprint;
   }
 
   /// Android only!
-  static Future<MobileApplication>
-      _gatherAndroidMobileApplicationInformation() async {
+  Future<MobileApplication> _gatherAndroidMobileApplicationInformation() async {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -185,8 +184,7 @@ It is very important that you keep the last fingerprint you generated in a stora
       (applicationPackageName.length - ".$applicationName".length),
     );
     final String applicationVersion = packageInfo.version;
-    final String applicationInstallationDate =
-        instalationDate.toIso8601String();
+    final DateTime applicationInstallationDate = instalationDate;
     final String applicationAndroidId = androidInfo.id;
 
     final Application application = Application(
@@ -284,8 +282,7 @@ It is very important that you keep the last fingerprint you generated in a stora
   }
 
   /// IOS only!
-  static Future<MobileApplication>
-      _gatherIosMobileApplicationInformation() async {
+  Future<MobileApplication> _gatherIosMobileApplicationInformation() async {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -310,8 +307,7 @@ It is very important that you keep the last fingerprint you generated in a stora
       (applicationPackageName.length - ".$applicationName".length),
     );
     final String applicationVersion = packageInfo.version;
-    final String applicationInstallationDate =
-        instalationDate.toIso8601String();
+    final DateTime applicationInstallationDate = instalationDate;
 
     final Application application = Application(
       installationDate: applicationInstallationDate,
@@ -407,7 +403,7 @@ It is very important that you keep the last fingerprint you generated in a stora
   }
 
   /// Sends fingerprint by http request
-  static Future<bool> sendDeviceFingerprintInformation(
+  Future<bool> sendDeviceFingerprintInformation(
     Fingerprint fingerprint, {
     bool sandbox = true,
   }) async {
@@ -416,10 +412,6 @@ It is very important that you keep the last fingerprint you generated in a stora
 
     final String url = sandbox ? sandboxUrl : productionUrl;
 
-    print(
-      fingerprint.toJson(),
-    );
-
     final res = await http.post(
       Uri.parse(url),
       body: fingerprint.toJson(),
@@ -427,10 +419,6 @@ It is very important that you keep the last fingerprint you generated in a stora
         'Content-type': 'application/json; charset=UTF-8',
       },
     );
-
-    print(res.toString());
-    print(res.statusCode);
-    print(res.body);
 
     return true;
   }

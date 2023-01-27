@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter_json_viewer/flutter_json_viewer.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:http/http.dart' as http;
 
@@ -127,6 +129,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int _counter = 0;
 
+  Map<String, dynamic>? _fingerprintSent;
+  Map<String, dynamic>? _requestResponse;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   void _incrementCounter() async {
     setState(() {
       _counter++;
@@ -149,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!Platform.isAndroid && !Platform.isIOS) {
       Navigator.of(context).pop();
 
-      print("Platform not surpoted");
+      throw Exception("Platform not surpoted");
     }
 
     final MobileApplication mobileApplication = Platform.isIOS
@@ -162,17 +172,24 @@ class _MyHomePageState extends State<MyHomePage> {
       mobileApplication: mobileApplication,
     );
 
-    print(checkTestFingerprint(fingerprint));
+    checkTestFingerprint(fingerprint); // false
 
-    print(fingerprint == Fingerprint.from(fingerprint));
+    fingerprint == Fingerprint.from(fingerprint); // true
 
-    print("data: \n");
-    print(fingerprint.toString());
+    final Fingerprint newFingerprint = Fingerprint(
+      organizationId: _organizationId,
+      mobileApplication: mobileApplication,
+    ); // This newFingerprint is generated using the same information
 
-    final res = await sendDeviceFingerprintInformation(fingerprint);
+    fingerprint ==
+        newFingerprint; // false, because the newFingerprint has a different sessionId
 
-    print("res: \n");
-    print(res);
+    fingerprint ==
+        newFingerprint.copyWith(
+          sessionId: fingerprint.sessionId,
+        ); // true, because if the information inside mobileApplication did not change, both fingerprints have the same information
+
+    await sendDeviceFingerprintInformation(fingerprint);
 
     if (!mounted) {
       return;
@@ -184,17 +201,11 @@ class _MyHomePageState extends State<MyHomePage> {
   bool checkTestFingerprint(Fingerprint fingerprint) {
     final Fingerprint testFingerprint = Fingerprint.fromMap(_testJson);
 
-    print(
-        "testFingerprint: \nHashcode: ${testFingerprint.hashCode} \ntoString: ${testFingerprint.toString()}");
-    print(
-        "fingerprint: \nHashcode: ${fingerprint.hashCode} \ntoString: ${fingerprint.toString()}");
-
     return fingerprint == testFingerprint;
   }
 
   /// Android only!
-  static Future<MobileApplication>
-      _gatherAndroidMobileApplicationInformation() async {
+  Future<MobileApplication> _gatherAndroidMobileApplicationInformation() async {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -317,8 +328,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   /// IOS only!
-  static Future<MobileApplication>
-      _gatherIosMobileApplicationInformation() async {
+  Future<MobileApplication> _gatherIosMobileApplicationInformation() async {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -439,7 +449,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   /// Sends fingerprint by http request
-  static Future<bool> sendDeviceFingerprintInformation(
+  Future<bool> sendDeviceFingerprintInformation(
     Fingerprint fingerprint, {
     bool sandbox = true,
   }) async {
@@ -448,9 +458,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final String url = sandbox ? sandboxUrl : productionUrl;
 
-    print(
-      fingerprint.toJson(),
-    );
+    setState(() {
+      _fingerprintSent = fingerprint.toMap();
+    });
 
     final res = await http.post(
       Uri.parse(url),
@@ -460,9 +470,17 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
 
-    print(res.toString());
-    print(res.statusCode);
-    print(res.body);
+    if (res.body.isNotEmpty) {
+      setState(() {
+        _requestResponse = jsonDecode(res.body);
+      });
+    } else {
+      setState(() {
+        _requestResponse = <String, String>{
+          "Error": "Response body returned empty",
+        };
+      });
+    }
 
     return true;
   }
@@ -473,18 +491,64 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      body: SizedBox.expand(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Text(
+                  'You have pushed the button this many times:',
+                ),
+                Text(
+                  '$_counter',
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Fingerprint information:"),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      _fingerprintSent != null
+                          ? JsonViewer(_fingerprintSent)
+                          : const SizedBox.shrink(),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("Response:"),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      _requestResponse != null
+                          ? JsonViewer(_requestResponse)
+                          : const SizedBox.shrink(),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+              ],
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -493,5 +557,10 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
