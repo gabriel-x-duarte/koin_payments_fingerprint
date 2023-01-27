@@ -22,9 +22,9 @@ It is recomended that you send the device fingerprint at least at these two mome
 1 - when the application starts or the user lands on first screen.
 2 - when the user starts the checkout procedure (before the payment action)
 
-You could implement a third optional method and send the device fingerprint when the user adds an item to the cart. You can also check for data equality and compare if this firgerprint is different from the last one and avoid too many unnecessary requests.
+You could implement a third optional method and send the device fingerprint when the user adds an item to the cart. You can also check for data equality and compare if this firgerprint is different from the last one (must provide the same sessionId) and avoid too many unnecessary requests.
 
-It is very important that you keep the last fingerprint you generated in a storage, since you'll have to use some of it's information when you submit the payment request.
+It is very important that you keep the last fingerprint you generated in a variable or storage, since you'll need to use some of it's information when you submit the payment request.
 
 
 ```dart
