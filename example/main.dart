@@ -181,13 +181,17 @@ class _MyHomePageState extends State<MyHomePage> {
       mobileApplication: mobileApplication,
     ); // This newFingerprint is generated using the same information
 
+    fingerprint.mobileApplication ==
+        newFingerprint
+            .mobileApplication; // true, because both mobileApplication have the same data;
+
     fingerprint ==
         newFingerprint; // false, because the newFingerprint has a different sessionId
 
     fingerprint ==
         newFingerprint.copyWith(
           sessionId: fingerprint.sessionId,
-        ); // true, because if the information inside mobileApplication did not change, both fingerprints have the same information
+        ); // true, because now both fingerprints have the same information
 
     await sendDeviceFingerprintInformation(fingerprint);
 
