@@ -83,11 +83,8 @@ class MobileApplication extends DataEquality {
   final Application application;
   final OperativeSystem operativeSystem;
   final Device device;
-  final Screen screen;
   final Hardware hardware;
   final Connectivity connectivity;
-  final String networkType;
-  final String isp;
 
   const MobileApplication._({
     required this.deviceUniqueId,
@@ -95,11 +92,8 @@ class MobileApplication extends DataEquality {
     required this.application,
     required this.operativeSystem,
     required this.device,
-    required this.screen,
     required this.hardware,
     required this.connectivity,
-    required this.networkType,
-    required this.isp,
   });
 
   MobileApplication({
@@ -107,23 +101,17 @@ class MobileApplication extends DataEquality {
     required Application application,
     required OperativeSystem operativeSystem,
     required Device device,
-    required Screen screen,
     required Hardware hardware,
     required Connectivity connectivity,
-    required String networkType,
-    required String isp,
   }) : this._(
           deviceUniqueId: deviceUniqueId,
           crossApplicationUniqueId:
-              "${deviceUniqueId.hashCode}-${"${deviceUniqueId.hashCode}${operativeSystem.hashCode}".hashCode}-${"${deviceUniqueId.hashCode}${screen.hashCode}".hashCode}",
+              "${deviceUniqueId.hashCode}-${"${deviceUniqueId.hashCode}${operativeSystem.hashCode}".hashCode}-${"${deviceUniqueId.hashCode}${device.screen.hashCode}".hashCode}",
           application: application,
           operativeSystem: operativeSystem,
           device: device,
-          screen: screen,
           hardware: hardware,
           connectivity: connectivity,
-          networkType: networkType,
-          isp: isp,
         );
 
   factory MobileApplication.from(MobileApplication mobileApplication) {
@@ -132,11 +120,8 @@ class MobileApplication extends DataEquality {
       application: Application.from(mobileApplication.application),
       operativeSystem: OperativeSystem.from(mobileApplication.operativeSystem),
       device: Device.from(mobileApplication.device),
-      screen: Screen.from(mobileApplication.screen),
       hardware: Hardware.from(mobileApplication.hardware),
       connectivity: Connectivity.from(mobileApplication.connectivity),
-      networkType: mobileApplication.networkType,
-      isp: mobileApplication.isp,
     );
   }
 
@@ -151,28 +136,20 @@ class MobileApplication extends DataEquality {
     final Map<String, dynamic> deviceData = Map<String, dynamic>.from(
       data['device'] ?? {},
     );
-    final Map<String, dynamic> screenData = Map<String, dynamic>.from(
-      data['screen'] ?? {},
-    );
     final Map<String, dynamic> hardwareData = Map<String, dynamic>.from(
       data['hardware'] ?? {},
     );
     final Map<String, dynamic> connectivityData = Map<String, dynamic>.from(
       data['connectivity'] ?? {},
     );
-    final String networkType = data['networkType'] ?? "";
-    final String isp = data['isp'] ?? "";
 
     return MobileApplication(
       deviceUniqueId: deviceUniqueId,
       application: Application.fromMap(applicationData),
       operativeSystem: OperativeSystem.fromMap(operativeSystemData),
       device: Device.fromMap(deviceData),
-      screen: Screen.fromMap(screenData),
       hardware: Hardware.fromMap(hardwareData),
       connectivity: Connectivity.fromMap(connectivityData),
-      networkType: networkType,
-      isp: isp,
     );
   }
 
@@ -185,11 +162,8 @@ class MobileApplication extends DataEquality {
     data['application'] = application.toMap();
     data['operativeSystem'] = operativeSystem.toMap();
     data['device'] = device.toMap();
-    data['screen'] = screen.toMap();
     data['hardware'] = hardware.toMap();
     data['connectivity'] = connectivity.toMap();
-    data['networkType'] = networkType;
-    data['isp'] = isp;
 
     return data;
   }
@@ -201,22 +175,16 @@ class MobileApplication extends DataEquality {
     Application? application,
     OperativeSystem? operativeSystem,
     Device? device,
-    Screen? screen,
     Hardware? hardware,
     Connectivity? connectivity,
-    String? networkType,
-    String? isp,
   }) {
     return MobileApplication(
       deviceUniqueId: deviceUniqueId ?? this.deviceUniqueId,
       application: application ?? this.application,
       operativeSystem: operativeSystem ?? this.operativeSystem,
       device: device ?? this.device,
-      screen: screen ?? this.screen,
       hardware: hardware ?? this.hardware,
       connectivity: connectivity ?? this.connectivity,
-      networkType: networkType ?? this.networkType,
-      isp: isp ?? this.isp,
     );
   }
 }
@@ -371,12 +339,14 @@ class Device extends DataEquality {
   final String model;
   final Battery battery;
   final String language;
+  final Screen screen;
 
   const Device({
     required this.name,
     required this.model,
     required this.battery,
     required this.language,
+    required this.screen,
   });
 
   factory Device.from(Device device) {
@@ -385,6 +355,7 @@ class Device extends DataEquality {
       model: device.model,
       battery: device.battery,
       language: device.language,
+      screen: Screen.from(device.screen),
     );
   }
 
@@ -395,12 +366,16 @@ class Device extends DataEquality {
       data['battery'] ?? {},
     );
     final String language = data['language'] ?? "";
+    final Map<String, dynamic> screenData = Map<String, dynamic>.from(
+      data['screen'] ?? {},
+    );
 
     return Device(
       name: name,
       model: model,
       battery: Battery.fromMap(batteryData),
       language: language,
+      screen: Screen.fromMap(screenData),
     );
   }
 
@@ -412,6 +387,7 @@ class Device extends DataEquality {
     data['model'] = model;
     data['battery'] = battery.toMap();
     data['language'] = language;
+    data['screen'] = screen.toMap();
 
     return data;
   }
@@ -422,12 +398,14 @@ class Device extends DataEquality {
     String? model,
     Battery? battery,
     String? language,
+    Screen? screen,
   }) {
     return Device(
       name: name ?? this.name,
       model: model ?? this.model,
       battery: battery ?? this.battery,
       language: language ?? this.language,
+      screen: screen ?? this.screen,
     );
   }
 }
@@ -612,14 +590,20 @@ class Hardware extends DataEquality {
 
 class Connectivity extends DataEquality {
   final IpAddresses ipAddresses;
+  final String networkType;
+  final String isp;
 
   const Connectivity({
     required this.ipAddresses,
+    required this.networkType,
+    required this.isp,
   });
 
   factory Connectivity.from(Connectivity connectivity) {
     return Connectivity(
       ipAddresses: IpAddresses.from(connectivity.ipAddresses),
+      networkType: connectivity.networkType,
+      isp: connectivity.isp,
     );
   }
 
@@ -627,9 +611,13 @@ class Connectivity extends DataEquality {
     final Map<String, dynamic> ipAddressesData = Map<String, dynamic>.from(
       data['ipAddresses'] ?? {},
     );
+    final String networkType = data['networkType'] ?? "";
+    final String isp = data['isp'] ?? "";
 
     return Connectivity(
       ipAddresses: IpAddresses.fromMap(ipAddressesData),
+      networkType: networkType,
+      isp: isp,
     );
   }
 
@@ -638,6 +626,8 @@ class Connectivity extends DataEquality {
     final Map<String, dynamic> data = <String, dynamic>{};
 
     data['ipAddresses'] = ipAddresses.toMap();
+    data['networkType'] = networkType;
+    data['isp'] = isp;
 
     return data;
   }
@@ -645,9 +635,13 @@ class Connectivity extends DataEquality {
   @override
   Connectivity copyWith({
     IpAddresses? ipAddresses,
+    String? networkType,
+    String? isp,
   }) {
     return Connectivity(
       ipAddresses: ipAddresses ?? this.ipAddresses,
+      networkType: networkType ?? this.networkType,
+      isp: isp ?? this.isp,
     );
   }
 }

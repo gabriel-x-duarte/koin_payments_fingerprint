@@ -71,9 +71,9 @@ class _MyHomePageState extends State<MyHomePage> {
         "name": "DeviceName",
         "model": "model",
         "battery": {"status": "discharging", "type": "Li-poly", "level": 29},
-        "language": "pt-BR"
+        "language": "pt-BR",
+        "screen": {"resolution": "1080x2340", "orientation": "portrait"},
       },
-      "screen": {"resolution": "1080x2340", "orientation": "portrait"},
       "hardware": {
         "cpuArchitecture": "aarch64",
         "cpuCores": 8,
@@ -120,10 +120,10 @@ class _MyHomePageState extends State<MyHomePage> {
           "line": "ipLine",
           "wireless": "192.168.1.103",
           "wired": "ipWired"
-        }
+        },
+        "networkType": "Unknown,Unknown",
+        "isp": ",TIM"
       },
-      "networkType": "Unknown,Unknown",
-      "isp": ",TIM"
     }
   };
 
@@ -259,6 +259,21 @@ class _MyHomePageState extends State<MyHomePage> {
       name: operativeSystemName,
     );
 
+    /// Screen
+    final screenWindowSize = WidgetsBinding.instance.window.physicalSize;
+    final screenWindowOrientation =
+        WidgetsBinding.instance.window.physicalSize.aspectRatio > 1
+            ? Orientation.landscape
+            : Orientation.portrait;
+
+    final Screen screen = Screen(
+      resolution:
+          "${screenWindowSize.width.truncate()}x${screenWindowSize.height.truncate()}",
+      orientation: screenWindowOrientation == Orientation.portrait
+          ? "portrait"
+          : "landscape",
+    );
+
     /// Device
     final String deviceName = androidInfo.device;
     final String deviceModel = androidInfo.model;
@@ -273,21 +288,7 @@ class _MyHomePageState extends State<MyHomePage> {
         type: "",
         level: 0,
       ),
-    );
-
-    /// Screen
-    final screenWindowSize = WidgetsBinding.instance.window.physicalSize;
-    final screenWindowOrientation =
-        WidgetsBinding.instance.window.physicalSize.aspectRatio > 1
-            ? Orientation.landscape
-            : Orientation.portrait;
-
-    final Screen screen = Screen(
-      resolution:
-          "${screenWindowSize.width.truncate()}x${screenWindowSize.height.truncate()}",
-      orientation: screenWindowOrientation == Orientation.portrait
-          ? "portrait"
-          : "landscape",
+      screen: screen,
     );
 
     /// Connectivity
@@ -315,6 +316,8 @@ class _MyHomePageState extends State<MyHomePage> {
         wireless: ipAddress ?? "",
         wired: "",
       ),
+      networkType: "",
+      isp: "",
     );
 
     ///
@@ -324,7 +327,6 @@ class _MyHomePageState extends State<MyHomePage> {
       application: application,
       operativeSystem: operativeSystem,
       device: device,
-      screen: screen,
       connectivity: connectivity,
     );
 
@@ -380,6 +382,21 @@ class _MyHomePageState extends State<MyHomePage> {
       name: operativeSystemName,
     );
 
+    /// Screen
+    final screenWindowSize = WidgetsBinding.instance.window.physicalSize;
+    final screenWindowOrientation =
+        WidgetsBinding.instance.window.physicalSize.aspectRatio > 1
+            ? Orientation.landscape
+            : Orientation.portrait;
+
+    final Screen screen = Screen(
+      resolution:
+          "${screenWindowSize.width.truncate()}x${screenWindowSize.height.truncate()}",
+      orientation: screenWindowOrientation == Orientation.portrait
+          ? "portrait"
+          : "landscape",
+    );
+
     /// Device
     final String deviceName = iosInfo.name ?? "";
     final String deviceModel = iosInfo.model ?? "";
@@ -394,21 +411,7 @@ class _MyHomePageState extends State<MyHomePage> {
         type: "",
         level: 0,
       ),
-    );
-
-    /// Screen
-    final screenWindowSize = WidgetsBinding.instance.window.physicalSize;
-    final screenWindowOrientation =
-        WidgetsBinding.instance.window.physicalSize.aspectRatio > 1
-            ? Orientation.landscape
-            : Orientation.portrait;
-
-    final Screen screen = Screen(
-      resolution:
-          "${screenWindowSize.width.truncate()}x${screenWindowSize.height.truncate()}",
-      orientation: screenWindowOrientation == Orientation.portrait
-          ? "portrait"
-          : "landscape",
+      screen: screen,
     );
 
     /// Connectivity
@@ -436,6 +439,8 @@ class _MyHomePageState extends State<MyHomePage> {
         wireless: ipAddress ?? "",
         wired: "",
       ),
+      networkType: "",
+      isp: "",
     );
 
     ///
@@ -445,7 +450,6 @@ class _MyHomePageState extends State<MyHomePage> {
       application: application,
       operativeSystem: operativeSystem,
       device: device,
-      screen: screen,
       connectivity: connectivity,
     );
 
